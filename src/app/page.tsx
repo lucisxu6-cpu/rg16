@@ -6,15 +6,15 @@ export default function HomePage() {
       <section className="card hero animIn stagger2">
         <div className="heroGrid">
           <div>
-            <p className="kicker">RG16 / V1</p>
+            <p className="kicker">RG16 / Jung v2</p>
             <h1 className="hTitle">
-              <span>用 Big Five 做题</span>
+              <span>用荣格八维做题</span>
               <br />
-              <span>推断 16-type</span>
+              <span>推断功能栈与 16-type</span>
             </h1>
             <p className="lead">
-              你会得到一个 MBTI 风格的 4 字母类型, 以及每个维度的倾向强度与边界提示。
-              深度报告（一次性付费）会基于同一份答案提供 10 个 aspects、后缀与更细的可解释结论。
+              你会得到八维（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）强度、主辅功能栈, 以及由功能栈推导的 4 字母标签。
+              深度报告（一次性付费）会把八维逐一映射到你的现实: 工作/关系/压力下的典型反应, 盲点与补偿路径, 并附上你的关键选择作为证据链。
             </p>
 
             <div className="chips" aria-label="highlights">
@@ -48,7 +48,7 @@ export default function HomePage() {
               <br />
               2) 不要想“理想的我”, 只选“更像我”的那一项。
               <br />
-              3) 如果你卡在两边, 选“有点像/不太像”就够了。
+              3) 二选一优先选“更自然的那一边”, 情境题优先选“你更常用的路径”。
             </p>
           </aside>
         </div>
@@ -58,15 +58,15 @@ export default function HomePage() {
         <div className="card sideCard">
           <h3>科学性来自哪里</h3>
           <p>
-            我们先用题目测量 Big Five（五大人格）及其 10 个 aspects, 再将结果映射到
-            16-type 的四个维度。你会看到每一步的阈值与置信度, 不做“黑箱断言”。
+            我们围绕八维认知功能设计了三类题目: 校准题（5 点量表）用来校正作答风格,
+            情境题让功能落到真实决策路径, 二选一用来拉开功能对比。输出包含置信度与作答质量提示, 避免“黑箱断言”。
           </p>
         </div>
         <div className="card sideCard">
-          <h3>为什么不是“纯 MBTI 题”</h3>
+          <h3>为什么不止 4 个字母</h3>
           <p>
-            MBTI 更像类型语言, Big Five 更像可测量的连续维度。我们用 Big Five
-            提升可解释性与一致性, 同时输出你想要的 16-type 结果（并标注不确定性）。
+            4 字母更像标签, 容易“对号入座”。我们用八维来描述你如何获取信息、如何做判断,
+            并把每一维落到现实可感知的行为线索上。你看到的不只是结论, 还有依据与边界。
           </p>
         </div>
       </section>

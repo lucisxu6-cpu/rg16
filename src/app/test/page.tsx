@@ -3,23 +3,21 @@
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { QUESTIONS_V1, QUESTIONNAIRE_VERSION_V1, type Likert } from "@/data/questions";
+import { JUNG_QUESTIONS_V2, LIKERT_SCALE_ZH, QUESTIONNAIRE_VERSION_V2, type JungQuestion } from "@/data/jung";
 
-const SCALE: Array<{ v: Likert; top: string; sub: string }> = [
-  { v: 1, top: "非常不同意", sub: "几乎完全不符合" },
-  { v: 2, top: "比较不同意", sub: "多数时候不符合" },
-  { v: 3, top: "不确定", sub: "一半一半" },
-  { v: 4, top: "比较同意", sub: "多数时候符合" },
-  { v: 5, top: "非常同意", sub: "几乎完全符合" },
-];
-
-type AnswerState = Record<string, Likert | undefined>;
+type AnswerState = Record<string, string | undefined>;
 
 function findFirstUnanswered(answers: AnswerState) {
-  for (let i = 0; i < QUESTIONS_V1.length; i++) {
-    if (answers[QUESTIONS_V1[i].id] == null) return i;
+  for (let i = 0; i < JUNG_QUESTIONS_V2.length; i++) {
+    if (answers[JUNG_QUESTIONS_V2[i].id] == null) return i;
   }
   return -1;
+}
+
+function questionTypeZh(q: JungQuestion) {
+  if (q.type === "likert") return "校准题";
+  if (q.type === "forced") return "二选一";
+  return "情境题";
 }
 
 export default function TestPage() {
@@ -31,15 +29,15 @@ export default function TestPage() {
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  const total = QUESTIONS_V1.length;
-  const q = QUESTIONS_V1[idx];
+  const total = JUNG_QUESTIONS_V2.length;
+  const q = JUNG_QUESTIONS_V2[idx];
 
   const answeredCount = useMemo(() => Object.values(answers).filter((v) => v != null).length, [answers]);
   const progressPct = Math.round((answeredCount / Math.max(1, total)) * 100);
 
-  function setAnswer(v: Likert) {
+  function setAnswer(optionId: string) {
     setAnswers((prev) => {
-      const next = { ...prev, [q.id]: v };
+      const next = { ...prev, [q.id]: optionId };
       return next;
     });
     setToast(null);
@@ -66,8 +64,8 @@ export default function TestPage() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          version: QUESTIONNAIRE_VERSION_V1,
-          mode: "quick",
+          version: QUESTIONNAIRE_VERSION_V2,
+          mode: "full",
           durationMs,
           answers,
         }),
@@ -96,29 +94,54 @@ export default function TestPage() {
           进度: {answeredCount}/{total}（{progressPct}%）
         </div>
         <div>
-          第 {idx + 1} 题 / 共 {total} 题
+          第 {idx + 1} 题 / 共 {total} 题 · {questionTypeZh(q)}
         </div>
       </div>
 
-      <div className="qText">{q.text}</div>
+      <div className="qText">{q.prompt}</div>
 
-      <div className="scale" role="radiogroup" aria-label="likert">
-        {SCALE.map((opt) => {
-          const active = answers[q.id] === opt.v;
-          return (
-            <button
-              key={opt.v}
-              type="button"
-              className={`opt ${active ? "optActive" : ""}`}
-              onClick={() => setAnswer(opt.v)}
-              aria-pressed={active}
-            >
-              <div className="optTop">{opt.top}</div>
-              <div className="optSub">{opt.sub}</div>
-            </button>
-          );
-        })}
-      </div>
+      {q.type === "likert" ? (
+        <div className="scale" role="radiogroup" aria-label="likert" data-n={5}>
+          {LIKERT_SCALE_ZH.map((opt) => {
+            const active = answers[q.id] === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                className={`opt ${active ? "optActive" : ""}`}
+                onClick={() => setAnswer(opt.id)}
+                aria-pressed={active}
+              >
+                <div className="optTop">{opt.top}</div>
+                <div className="optSub">{opt.sub}</div>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div
+          className="scale"
+          role="radiogroup"
+          aria-label="choices"
+          data-n={q.options.length}
+        >
+          {q.options.map((opt) => {
+            const active = answers[q.id] === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                className={`opt ${active ? "optActive" : ""}`}
+                onClick={() => setAnswer(opt.id)}
+                aria-pressed={active}
+              >
+                <div className="optTop">{opt.title}</div>
+                <div className="optSub">{opt.desc}</div>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       <div className="navRow">
         <button
@@ -150,9 +173,8 @@ export default function TestPage() {
 
       {toast ? <div className="toast">{toast}</div> : null}
       <div className="toast muted">
-        提示: 按你最近 6-12 个月的真实状态作答。不要想“理想的我”。
+        提示: 按你最近 6-12 个月的真实状态作答。情境题优先选“更自然”的那一项。
       </div>
     </main>
   );
 }
-

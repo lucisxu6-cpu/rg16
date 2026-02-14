@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 
@@ -44,7 +45,30 @@ type StoreData = {
   entitlements: Record<string, Record<string, StoredEntitlement>>; // assessmentId -> module -> entitlement
 };
 
-const DEFAULT_PATH = path.join(process.cwd(), ".data", "rg16-store.json");
+function findRepoRoot(startDir: string): string {
+  // Next dev/build may run route modules under a different cwd (e.g. inside .next/).
+  // Walk up to find this repo's package.json so file storage is stable.
+  let dir = startDir;
+  for (let i = 0; i < 16; i++) {
+    const pj = path.join(dir, "package.json");
+    if (existsSync(pj)) {
+      try {
+        const raw = readFileSync(pj, "utf8");
+        const parsed = JSON.parse(raw) as { name?: unknown };
+        if (parsed?.name === "rg16") return dir;
+      } catch {
+        // ignore
+      }
+    }
+
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return startDir;
+}
+
+const DEFAULT_PATH = path.join(findRepoRoot(process.cwd()), ".data", "rg16-store.json");
 
 function storePath() {
   return process.env.RG16_STORE_PATH || DEFAULT_PATH;

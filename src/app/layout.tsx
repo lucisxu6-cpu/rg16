@@ -4,9 +4,9 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RG16 · 16-type (MBTI-style) via Big Five",
+  title: "RG16 · 荣格八维认知功能测评（含 16-type 标签）",
   description:
-    "用 Big Five 五大人格测量，映射得到 MBTI 风格 16-type，并支持付费解锁深度报告。",
+    "用荣格八维（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）做题推断你的功能栈与 16-type 标签，并支持付费解锁更深入的现实映射报告。",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
           <div className="topbar animIn stagger1">
             <div className="brand">
               <div className="logo">RG16</div>
-              <div className="tagline">Big Five grounded · MBTI-style output</div>
+              <div className="tagline">Jung 8 functions grounded · MBTI label output</div>
             </div>
             <Link className="btn btnSmall" href="/test">
               开始做题
@@ -39,8 +39,7 @@ export default function RootLayout({
           {children}
           <div className="footer animIn stagger4">
             <div>
-              免责声明: 本测评为自我探索工具, 不构成医疗/心理诊断建议。16-type
-              为基于 Big Five 的映射推断, 存在不确定性。
+              免责声明: 本测评为自我探索工具, 不构成医疗/心理诊断建议。4 字母类型为由功能栈推导的标签, 核心输出是八维与功能栈, 仍存在不确定性。
             </div>
           </div>
         </div>
