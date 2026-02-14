@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+dist
+
+.data
+
+.env
+.env.local
+
+*.log
+
+dev.db
+dev.db-journal
+prisma/dev.db
