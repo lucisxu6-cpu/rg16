@@ -80,7 +80,7 @@ async function load(): Promise<StoreData> {
       orders: parsed.orders ?? {},
       entitlements: parsed.entitlements ?? {},
     };
-  } catch (_e) {
+  } catch {
     return { assessments: {}, orders: {}, entitlements: {} };
   }
 }

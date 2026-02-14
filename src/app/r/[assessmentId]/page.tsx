@@ -33,9 +33,9 @@ function traitNameShort(id: TraitId) {
 export default async function ResultPage({
   params,
 }: {
-  params: { assessmentId: string };
+  params: Promise<{ assessmentId: string }>;
 }) {
-  const { assessmentId } = params;
+  const { assessmentId } = await params;
 
   const row = await getAssessment(assessmentId);
 
