@@ -51,6 +51,56 @@ function funcPairRows(scores: Record<FunctionId, number>) {
   return pairs.map(([a, b]) => ({ a, b, av: scores[a], bv: scores[b] }));
 }
 
+const FUNCTION_REALITY_HINTS: Record<
+  FunctionId,
+  { strength: string; risk: string; advice: string }
+> = {
+  Se: {
+    strength: "你更容易在实时场景中迅速抓重点并行动，执行启动快。",
+    risk: "在高压下可能过度追求即时反馈，忽略长期成本。",
+    advice: "关键决策前给自己加一条“24 小时复盘窗口”，避免冲动收尾。",
+  },
+  Si: {
+    strength: "你擅长复用经验与流程，能把结果做得稳定可复制。",
+    risk: "过于依赖已验证路径时，可能错过新机会。",
+    advice: "在稳态方案外，固定保留 10% 资源做低风险新尝试。",
+  },
+  Ne: {
+    strength: "你善于看到多条可能路径，创意与连接能力突出。",
+    risk: "发散过多时，容易出现方向频繁切换。",
+    advice: "每次发散后用“1 条主线 + 2 条备线”收敛，避免执行稀释。",
+  },
+  Ni: {
+    strength: "你更擅长提炼趋势与本质，战略判断有前瞻性。",
+    risk: "过度收敛时，可能忽视外部即时反馈。",
+    advice: "把你的结论拆成可验证的阶段性假设，用小实验校正直觉。",
+  },
+  Te: {
+    strength: "你关注目标、效率和结果，推进项目的能力很强。",
+    risk: "只盯结果时，可能让协作方感到被压缩或被忽视。",
+    advice: "推进节点前加 5 分钟“风险与情绪对齐”，提升团队跟随度。",
+  },
+  Ti: {
+    strength: "你会追求逻辑精确与模型一致，判断质量通常较高。",
+    risk: "追求完备性时，可能影响推进速度。",
+    advice: "为关键分析设置时间上限，达到“足够正确”后先行动再迭代。",
+  },
+  Fe: {
+    strength: "你能敏锐感知关系与氛围，沟通协同能力突出。",
+    risk: "过度照顾他人时，容易压住自己的真实需求。",
+    advice: "在共识达成后，明确表达你的底线与资源边界。",
+  },
+  Fi: {
+    strength: "你有稳定的价值判断，决策更容易保持真实一致。",
+    risk: "价值冲突时，可能转向内耗或回避表达。",
+    advice: "把内在标准转成外部可沟通语言，减少误解成本。",
+  },
+};
+
+function sortedFunctionIds(scores: Record<FunctionId, number>) {
+  return (Object.keys(scores) as FunctionId[]).sort((a, b) => scores[b] - scores[a]);
+}
+
 export default async function ResultPage({
   params,
 }: {
@@ -90,6 +140,9 @@ export default async function ResultPage({
       : null;
 
     const stackLine = `${jung.stack.dom} → ${jung.stack.aux} → ${jung.stack.ter} → ${jung.stack.inf}`;
+    const ranked = sortedFunctionIds(scores.functions);
+    const top2 = ranked.slice(0, 2);
+    const low2 = ranked.slice(-2);
 
     return (
       <main>
@@ -100,6 +153,7 @@ export default async function ResultPage({
             <div className="pill">功能栈: {stackLine}</div>
             <div className="pill">类型置信度: {pct(jung.confidence)} / {jung.level}</div>
             <div className="pill">作答质量: {Math.round(quality.quality)} / 100</div>
+            <div className="pill">免费报告已解锁</div>
             {bypass ? <div className="pill">DEV_BYPASS_PAYWALL=1</div> : null}
           </div>
 
@@ -129,6 +183,32 @@ export default async function ResultPage({
         </section>
 
         <section className="section grid2">
+          <div className="card sideCard">
+            <h3>免费版核心解读（已包含）</h3>
+            <p>
+              你的高频功能是 <strong>{top2[0]}</strong> 与 <strong>{top2[1]}</strong>，低频功能相对集中在{" "}
+              <strong>{low2[0]}</strong> 与 <strong>{low2[1]}</strong>。这代表你在处理信息与做决策时有明显偏好路径。
+            </p>
+            <ul>
+              <li>{funcLabel(top2[0])}：{FUNCTION_REALITY_HINTS[top2[0]].strength}</li>
+              <li>{funcLabel(top2[1])}：{FUNCTION_REALITY_HINTS[top2[1]].strength}</li>
+              <li>{funcLabel(low2[1])}：{FUNCTION_REALITY_HINTS[low2[1]].risk}</li>
+            </ul>
+          </div>
+          <div className="card sideCard">
+            <h3>免费行动建议（先用起来）</h3>
+            <ul>
+              <li>{FUNCTION_REALITY_HINTS[top2[0]].advice}</li>
+              <li>{FUNCTION_REALITY_HINTS[top2[1]].advice}</li>
+              <li>针对 {low2[1]}：{FUNCTION_REALITY_HINTS[low2[1]].advice}</li>
+            </ul>
+            <p className="muted" style={{ marginTop: 8 }}>
+              你已经拿到可直接使用的结果。付费部分是进一步的逐维现实映射与证据链，不影响免费报告可用性。
+            </p>
+          </div>
+        </section>
+
+        <section className="section grid2">
           <UnlockPanel assessmentId={assessmentId} unlocked={deepUnlocked} skuId={sku.id} priceLabel={priceLabel} />
 
           {!deepUnlocked ? (
@@ -136,8 +216,28 @@ export default async function ResultPage({
               <div className="lockInner">
                 <div className="lockTitle">Deep Report (Locked)</div>
                 <p className="lockText">
-                  八维现实映射（每个功能落到工作/关系/压力）、证据链（你在关键题上的选择）、以及更完整的功能栈解读。
+                  你已经拿到完整免费报告。升级后新增“逐维现实映射 + 关键题证据链 + 个性化策略”，用于更深层自我分析。
                 </p>
+                <div className="compareGrid" style={{ marginTop: 12 }}>
+                  <div className="compareCell">
+                    <h4>免费已包含</h4>
+                    <ul>
+                      <li>类型与功能栈</li>
+                      <li>八维强度条</li>
+                      <li>置信度与质量提示</li>
+                      <li>核心解读与行动建议</li>
+                    </ul>
+                  </div>
+                  <div className="compareCell">
+                    <h4>付费新增</h4>
+                    <ul>
+                      <li>每个功能的现实场景映射</li>
+                      <li>盲点与补偿路径</li>
+                      <li>关键题目证据链</li>
+                      <li>更细颗粒建议与边界说明</li>
+                    </ul>
+                  </div>
+                </div>
                 <div className="barList" style={{ marginTop: 12 }}>
                   {(Object.keys(scores.functions) as FunctionId[]).map((id) => (
                     <div className="barRow" key={id}>

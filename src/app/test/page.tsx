@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { JUNG_QUESTIONS_V2, LIKERT_SCALE_ZH, QUESTIONNAIRE_VERSION_V2, type JungQuestion } from "@/data/jung";
+import { SKUS } from "@/lib/sku";
 
 type AnswerState = Record<string, string | undefined>;
 
@@ -31,6 +32,8 @@ export default function TestPage() {
 
   const total = JUNG_QUESTIONS_V2.length;
   const q = JUNG_QUESTIONS_V2[idx];
+  const sku = SKUS.deep_report_v1;
+  const priceLabel = sku.currency === "usd" ? `$${(sku.unitAmount / 100).toFixed(2)}` : `¥${(sku.unitAmount / 100).toFixed(2)}`;
 
   const answeredCount = useMemo(() => Object.values(answers).filter((v) => v != null).length, [answers]);
   const progressPct = Math.round((answeredCount / Math.max(1, total)) * 100);
@@ -86,6 +89,20 @@ export default function TestPage() {
 
   return (
     <main className="card testWrap animIn stagger2">
+      <section className="billingNotice" aria-label="billing-clarity">
+        <div className="billingTitle">计费说明（先看再做）</div>
+        <div className="billingGrid">
+          <div className="billingCell">
+            <strong>免费即可获得</strong>
+            <span>16-type + 功能栈 + 八维强度 + 置信度与基础解读</span>
+          </div>
+          <div className="billingCell">
+            <strong>可选付费 {priceLabel}</strong>
+            <span>解锁逐维现实映射、证据链与进阶建议（非必买）</span>
+          </div>
+        </div>
+      </section>
+
       <div className="progressBar" aria-label="progress">
         <div className="progressFill" style={{ width: `${progressPct}%` }} />
       </div>
@@ -173,7 +190,7 @@ export default function TestPage() {
 
       {toast ? <div className="toast">{toast}</div> : null}
       <div className="toast muted">
-        提示: 按你最近 6-12 个月的真实状态作答。情境题优先选“更自然”的那一项。
+        提示: 按你最近 6-12 个月的真实状态作答。情境题优先选“更自然”的那一项。提交后会先展示免费报告，不会先扣费。
       </div>
     </main>
   );

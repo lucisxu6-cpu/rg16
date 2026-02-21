@@ -68,17 +68,22 @@ export default function UnlockPanel(props: Props) {
     return (
       <div className="card sideCard animIn stagger3">
         <h3>深度报告已解锁</h3>
-        <p>你可以随时回到这个链接查看（无登录）。</p>
+        <p>你可以随时回到这个链接查看（无登录）。免费结果也会保留，不会被覆盖。</p>
       </div>
     );
   }
 
   return (
     <div className="card sideCard animIn stagger3">
-      <h3>解锁深度报告</h3>
+      <h3>可选升级：解锁深度报告</h3>
       <p>
-        一次性付费 {props.priceLabel}，解锁：10 个 aspects、类型清晰度（高/中/边界）与后缀（-A/-T）等。
+        你现在看到的是完整免费结果。若希望更深入，一次性付费 {props.priceLabel} 可解锁八维逐维现实映射、关键题证据链与更细行动建议。
       </p>
+      <ul style={{ marginTop: 10, paddingLeft: 18 }}>
+        <li>免费已含：类型、功能栈、八维强度、置信度</li>
+        <li>付费新增：每一维在工作/关系/压力中的具体表现</li>
+        <li>付费新增：结论依据（你在关键题目的选择）</li>
+      </ul>
       <div className="ctaRow" style={{ marginTop: 12 }}>
         <button type="button" className="btn btnDanger" onClick={checkout} disabled={busy}>
           {busy ? "跳转中..." : "去支付并解锁"}
@@ -89,4 +94,3 @@ export default function UnlockPanel(props: Props) {
     </div>
   );
 }
-

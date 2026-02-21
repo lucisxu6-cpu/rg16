@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SKUS } from "@/lib/sku";
 
 const FUNCTION_PRIMER = [
   { id: "Se", title: "外倾感觉 Se", text: "关注当下现实与即时反馈，反应快、落地快。" },
@@ -12,6 +13,9 @@ const FUNCTION_PRIMER = [
 ];
 
 export default function HomePage() {
+  const sku = SKUS.deep_report_v1;
+  const priceLabel = sku.currency === "usd" ? `$${(sku.unitAmount / 100).toFixed(2)}` : `¥${(sku.unitAmount / 100).toFixed(2)}`;
+
   return (
     <main className="landing">
       <section className="card hero heroV2 animIn stagger2">
@@ -79,6 +83,45 @@ export default function HomePage() {
               <li>包含作答质量与置信度提示</li>
             </ul>
           </aside>
+        </div>
+      </section>
+
+      <section className="section pricingMatrix animIn stagger3">
+        <div className="card pricingIntro">
+          <p className="kicker">Pricing Clarity</p>
+          <h3>先说清楚：做完题一定有免费结果，付费是可选升级</h3>
+          <p>
+            你提交后会立刻看到完整免费报告（八维强度 + 主辅功能 + 类型置信度 + 基础解读），
+            不需要先付款。付费只在你想看更深层现实映射时再决定。
+          </p>
+        </div>
+        <div className="planGrid" aria-label="free-vs-paid">
+          <article className="card planCard">
+            <div className="planHead">
+              <p>免费版</p>
+              <strong>¥0</strong>
+            </div>
+            <ul className="planList">
+              <li>16-type 标签（由功能栈推导）</li>
+              <li>主导/辅助/第三/劣势功能栈</li>
+              <li>八维强度条（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）</li>
+              <li>类型置信度 + 作答质量提示</li>
+              <li>免费核心解读（优势、风险、行动建议）</li>
+            </ul>
+          </article>
+          <article className="card planCard planCardPro">
+            <div className="planHead">
+              <p>深度版</p>
+              <strong>{priceLabel}</strong>
+            </div>
+            <ul className="planList">
+              <li>八维逐维现实映射（工作/关系/压力）</li>
+              <li>每个维度的盲点与补偿路径</li>
+              <li>关键题目证据链（结论可追溯）</li>
+              <li>类型层级（高阶/中阶/边界）进阶解读</li>
+              <li>更细的个性化落地建议</li>
+            </ul>
+          </article>
         </div>
       </section>
 
