@@ -13,7 +13,7 @@ export const SKUS: Record<SkuId, SkuConfig> = {
   deep_report_v1: {
     id: "deep_report_v1",
     nameZh: "RG16 深度报告",
-    currency: "usd",
+    currency: "cny",
     unitAmount: 999,
     modules: ["deep_report", "aspects", "suffix", "level"],
   },
@@ -23,4 +23,3 @@ export function getSkuConfig(id: string): SkuConfig | null {
   if (id in SKUS) return SKUS[id as SkuId];
   return null;
 }
-

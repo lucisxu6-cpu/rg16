@@ -795,6 +795,36 @@ a{ color: inherit; text-decoration: none; }
   line-height: 1.55;
 }
 
+.payMethodRow{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.payMethodBtn{
+  appearance: none;
+  border: 1px solid rgba(11,18,32,.14);
+  background: rgba(255,255,255,.38);
+  color: rgba(11,18,32,.82);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.payMethodBtn:hover{
+  background: rgba(255,255,255,.52);
+  transform: translateY(-1px);
+}
+
+.payMethodBtnActive{
+  border-color: rgba(11,18,32,.26);
+  background: linear-gradient(90deg, rgba(198,255,107,.62), rgba(123,223,242,.42));
+  color: rgba(11,18,32,.95);
+}
+
 .compareGrid{
   display:grid;
   grid-template-columns: repeat(2, minmax(0,1fr));

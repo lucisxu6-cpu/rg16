@@ -1,18 +1,18 @@
 # RG16
 
-一个基于 **Big Five（五大人格）测量**、并将结果 **可解释地映射到 16-type（MBTI 风格）** 的 Web 测评系统。
+一个基于 **荣格八维（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）** 的 Web 测评系统，输出 16-type 标签与功能栈，并支持付费解锁深度报告。
 
 ## 核心特性（MVP）
 
-- 免费：做题后得到 16-type（四字母）结果与置信度提示
-- 付费（一次性购买）：解锁更深入报告（10 个 aspects、压力/沟通建议、`-A/-T` 后缀与“类型清晰度”等）
+- 免费：做题后得到 16-type、功能栈、八维强度、置信度与基础解读
+- 付费（一次性购买）：解锁逐维现实映射、证据链、层级（低/中/高）判定与升阶建议
 - 无登录：结果链接以 `assessmentId` 作为访问凭证（可分享）
 
 ## 技术栈
 
 - Next.js（App Router）+ TypeScript
 - 文件存储（`.data/rg16-store.json`，MVP）；后续可替换为 Postgres/ORM
-- Stripe Checkout（一次性购买）
+- 支付：支付宝 WAP + 微信支付 H5（已接入），Stripe（兼容保留）
 
 ## 本地运行
 
@@ -34,6 +34,13 @@ cp .env.example .env
 pnpm dev
 ```
 
+## 支付回调路由
+
+- 支付宝异步通知：`/api/payments/alipay/notify`
+- 微信支付异步通知：`/api/payments/wechat/notify`
+
+生产环境请将上述回调 URL 配置到对应商户平台，并保证 `NEXT_PUBLIC_APP_URL` 为公网 HTTPS 域名。
+
 ## 免责声明
 
-本项目提供的是自我探索工具，不构成医疗/心理诊断建议。16-type（MBTI 风格）结果为基于 Big Five 的映射推断，存在不确定性。
+本项目提供的是自我探索工具，不构成医疗/心理诊断建议。结果用于辅助自我理解，不应替代专业评估。
