@@ -81,6 +81,30 @@ a{ color: inherit; text-decoration: none; }
   font-size: 13px;
 }
 
+@media (max-width: 760px){
+  .shell{
+    padding: 14px 12px 50px;
+  }
+  .topbar{
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0 14px;
+  }
+  .brand{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .tagline{
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 40ch;
+  }
+  .btnSmall{
+    padding: 9px 11px;
+  }
+}
+
 .card{
   background: var(--card);
   border: 1px solid var(--hairline);
@@ -423,6 +447,16 @@ a{ color: inherit; text-decoration: none; }
   margin-top: 18px;
 }
 
+@media (max-width: 760px){
+  .ctaRow{
+    gap: 8px;
+  }
+  .ctaRow .btn{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .btn{
   appearance:none;
   border: 1px solid rgba(11,18,32,.18);
@@ -541,6 +575,10 @@ a{ color: inherit; text-decoration: none; }
   padding: 18px;
 }
 
+.testHeader{
+  position: relative;
+}
+
 .billingNotice{
   margin-bottom: 12px;
   border: 1px solid rgba(11,18,32,.16);
@@ -631,6 +669,11 @@ a{ color: inherit; text-decoration: none; }
   border: 1px solid rgba(11,18,32,.14);
   background: rgba(255,255,255,.28);
   padding: 12px;
+  min-height: 74px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   cursor: pointer;
   transition: transform .15s ease, background .15s ease, border-color .15s ease;
 }
@@ -657,6 +700,11 @@ a{ color: inherit; text-decoration: none; }
   flex-wrap:wrap;
   gap: 10px;
   margin-top: 14px;
+}
+
+.navRow .btn{
+  justify-content: center;
+  min-height: 46px;
 }
 
 .toast{
@@ -782,5 +830,127 @@ a{ color: inherit; text-decoration: none; }
 @media (max-width: 640px){
   .compareGrid{
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px){
+  .testWrap{
+    padding: 16px;
+  }
+  .scale[data-n="5"]{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px){
+  body::before{
+    opacity: .14;
+  }
+  .testWrap{
+    padding: 14px;
+  }
+  .billingNotice{
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  .billingTitle{
+    font-size: 11px;
+    letter-spacing: .12em;
+  }
+  .testHeader{
+    position: sticky;
+    top: 6px;
+    z-index: 6;
+    margin-bottom: 8px;
+    padding: 8px 8px 6px;
+    border-radius: 12px;
+    border: 1px solid rgba(11,18,32,.12);
+    background: rgba(246,240,230,.78);
+    backdrop-filter: blur(8px);
+  }
+  .qMeta{
+    margin: 8px 0 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 11.5px;
+  }
+  .qText{
+    font-size: clamp(21px, 6.6vw, 30px);
+    line-height: 1.2;
+    margin: 8px 0 12px;
+  }
+  .scale,
+  .scale[data-n="2"],
+  .scale[data-n="4"],
+  .scale[data-n="5"]{
+    grid-template-columns: 1fr;
+  }
+  .opt{
+    min-height: 86px;
+    padding: 14px 12px;
+  }
+  .optTop{
+    font-size: 14px;
+    line-height: 1.35;
+  }
+  .optSub{
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .navRow{
+    position: sticky;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+    z-index: 6;
+    margin-top: 12px;
+    padding-top: 8px;
+    background: linear-gradient(180deg, rgba(246,240,230,0), rgba(246,240,230,.92) 28%);
+  }
+  .navRow .btn{
+    flex: 1 1 calc(50% - 5px);
+  }
+  .navRow .btn:only-child{
+    flex-basis: 100%;
+  }
+  .typeBig{
+    font-size: clamp(36px, 16vw, 56px);
+  }
+  .typeMeta{
+    gap: 8px;
+  }
+  .pill{
+    font-size: 12px;
+    padding: 7px 9px;
+  }
+}
+
+@media (max-width: 640px){
+  .barRow{
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label value"
+      "track track";
+    gap: 6px 8px;
+  }
+  .barRow > div:first-child{
+    grid-area: label;
+  }
+  .barRow > .barTrack{
+    grid-area: track;
+  }
+  .barRow > .muted{
+    grid-area: value;
+    text-align: right;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 420px){
+  .logo{
+    font-size: 16px;
+    padding: 7px 10px;
+  }
+  .tagline{
+    font-size: 11px;
   }
 }

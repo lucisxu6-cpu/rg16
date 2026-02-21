@@ -103,15 +103,17 @@ export default function TestPage() {
         </div>
       </section>
 
-      <div className="progressBar" aria-label="progress">
-        <div className="progressFill" style={{ width: `${progressPct}%` }} />
-      </div>
-      <div className="qMeta">
-        <div>
-          进度: {answeredCount}/{total}（{progressPct}%）
+      <div className="testHeader">
+        <div className="progressBar" aria-label="progress">
+          <div className="progressFill" style={{ width: `${progressPct}%` }} />
         </div>
-        <div>
-          第 {idx + 1} 题 / 共 {total} 题 · {questionTypeZh(q)}
+        <div className="qMeta">
+          <div>
+            进度: {answeredCount}/{total}（{progressPct}%）
+          </div>
+          <div>
+            第 {idx + 1} 题 / 共 {total} 题 · {questionTypeZh(q)}
+          </div>
         </div>
       </div>
 
