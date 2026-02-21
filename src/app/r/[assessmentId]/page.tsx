@@ -21,6 +21,12 @@ function pct(n: number) {
   return `${Math.round(n * 100)}%`;
 }
 
+function normalizeJungLevel(level: unknown): "高阶" | "中阶" | "低阶" {
+  if (level === "高阶" || level === "中阶" || level === "低阶") return level;
+  if (level === "边界") return "低阶";
+  return "低阶";
+}
+
 function traitNameShort(id: TraitId) {
   switch (id) {
     case "O":
@@ -129,6 +135,7 @@ export default async function ResultPage({
   if (isV2) {
     const scores = row.scoresJson as unknown as JungScorePackV2;
     const jung = row.mbtiJson as unknown as JungTypeResultV2;
+    const levelLabel = normalizeJungLevel((jung as { level?: unknown }).level);
 
     const report = deepUnlocked
       ? buildJungDeepReport({
@@ -151,7 +158,7 @@ export default async function ResultPage({
           <div className="typeBig">{jung.type}</div>
           <div className="typeMeta">
             <div className="pill">功能栈: {stackLine}</div>
-            <div className="pill">类型置信度: {pct(jung.confidence)} / {jung.level}</div>
+            <div className="pill">类型置信度: {pct(jung.confidence)} / {levelLabel}</div>
             <div className="pill">作答质量: {Math.round(quality.quality)} / 100</div>
             <div className="pill">免费报告已解锁</div>
             {bypass ? <div className="pill">DEV_BYPASS_PAYWALL=1</div> : null}
@@ -276,6 +283,31 @@ export default async function ResultPage({
                 <br />
                 {report.domAuxLineZh}
               </p>
+            </div>
+
+            <div className="card sideCard" style={{ marginTop: 14 }}>
+              <h3>层级判定与升阶路径</h3>
+              <p>
+                当前层级: <strong>{report.levelCard.currentZh}</strong>
+                <br />
+                {report.levelCard.targetZh}
+              </p>
+              <p className="muted" style={{ marginTop: 10, marginBottom: 6 }}>
+                判定依据:
+              </p>
+              <ul>
+                {report.levelCard.diagnosisZh.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+              <p className="muted" style={{ marginTop: 10, marginBottom: 6 }}>
+                升阶建议:
+              </p>
+              <ul>
+                {report.levelCard.upgradePlanZh.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
             </div>
 
             <div className="grid2" style={{ marginTop: 14 }}>

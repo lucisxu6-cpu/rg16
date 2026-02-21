@@ -25,7 +25,7 @@ export type GrantStack = {
   inf: FunctionId;
 };
 
-export type JungLevel = "高阶" | "中阶" | "边界";
+export type JungLevel = "高阶" | "中阶" | "低阶";
 
 export type JungTypeMatch = {
   type: JungTypeId;
@@ -111,7 +111,7 @@ export function inferJungTypeV2(functionScores: Record<FunctionId, number>): Jun
   const pc = pairClarity01(functionScores);
 
   const confidence = clamp01(0.65 * gapConf + 0.35 * pc);
-  const level: JungLevel = confidence >= 0.75 ? "高阶" : confidence >= 0.6 ? "中阶" : "边界";
+  const level: JungLevel = confidence >= 0.75 ? "高阶" : confidence >= 0.6 ? "中阶" : "低阶";
 
   return {
     version: "v2",
@@ -126,4 +126,3 @@ export function inferJungTypeV2(functionScores: Record<FunctionId, number>): Jun
     },
   };
 }
-

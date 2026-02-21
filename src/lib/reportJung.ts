@@ -53,6 +53,13 @@ export type JungDeepReport = {
   summaryZh: string;
   stackLineZh: string;
   domAuxLineZh: string;
+  levelZh: "高阶" | "中阶" | "低阶";
+  levelCard: {
+    currentZh: string;
+    targetZh: string;
+    diagnosisZh: string[];
+    upgradePlanZh: string[];
+  };
   strengthsZh: string[];
   risksZh: string[];
   functions: FunctionSection[];
@@ -369,6 +376,81 @@ function stackLine(stack: JungTypeResultV2["stack"]) {
   return `${stack.dom} → ${stack.aux} → ${stack.ter} → ${stack.inf}`;
 }
 
+function normalizeLevelZh(level: unknown): "高阶" | "中阶" | "低阶" {
+  if (level === "高阶" || level === "中阶" || level === "低阶") return level;
+  if (level === "边界") return "低阶";
+  return "低阶";
+}
+
+function weakestPair(functions: Record<FunctionId, number>) {
+  const pairs: Array<[FunctionId, FunctionId]> = [
+    ["Se", "Si"],
+    ["Ne", "Ni"],
+    ["Te", "Ti"],
+    ["Fe", "Fi"],
+  ];
+
+  let best = { a: pairs[0][0], b: pairs[0][1], diff: Math.abs(functions[pairs[0][0]] - functions[pairs[0][1]]) };
+  for (const [a, b] of pairs.slice(1)) {
+    const diff = Math.abs(functions[a] - functions[b]);
+    if (diff < best.diff) best = { a, b, diff };
+  }
+  return best;
+}
+
+function buildLevelCard(args: {
+  level: "高阶" | "中阶" | "低阶";
+  scores: Record<FunctionId, number>;
+  quality: QualityPack;
+  typeResult: JungTypeResultV2;
+}): JungDeepReport["levelCard"] {
+  const { level, scores, quality, typeResult } = args;
+  const weakPair = weakestPair(scores);
+  const diagnosisZh: string[] = [
+    `当前层级: ${level}（置信度 ${Math.round(typeResult.confidence * 100)}%，类型差值 gap ${typeResult.debug.gap}，对偶清晰度 ${Math.round(typeResult.debug.pairClarity * 100)}%）。`,
+    `最难区分的一组是 ${weakPair.a}/${weakPair.b}（差值 ${weakPair.diff} 分），这是层级提升时最需要关注的分辨点。`,
+    `本次作答质量 ${quality.quality}/100${quality.warnings.length > 0 ? `，注意: ${quality.warnings[0]}` : "，结果稳定性较好。"
+    }`,
+  ];
+
+  if (level === "低阶") {
+    return {
+      currentZh: "低阶（起步阶段）",
+      targetZh: "目标: 从低阶提升到中阶（先提高稳定性与功能分辨度）",
+      diagnosisZh,
+      upgradePlanZh: [
+        `做“决策日志”14 天: 每天记录 1 个关键决策, 标注你更像在用哪条功能路径（如 ${typeResult.stack.dom}/${typeResult.stack.aux}）。`,
+        `针对 ${weakPair.a}/${weakPair.b} 做 A/B 训练: 同一问题分别写两种解法, 对比哪种更自然且结果更好。`,
+        "两周后复测一次, 保持同样作答环境（时间、状态、节奏）以减少噪音对层级的干扰。",
+      ],
+    };
+  }
+
+  if (level === "中阶") {
+    return {
+      currentZh: "中阶（可塑阶段）",
+      targetZh: "目标: 从中阶提升到高阶（加强跨场景一致性）",
+      diagnosisZh,
+      upgradePlanZh: [
+        `每周至少 2 次刻意调用第三功能 ${typeResult.stack.ter}: 在熟悉任务里练“非惯性做法”，提升适配宽度。`,
+        `为劣势功能 ${typeResult.stack.inf} 设压力预案: 当你出现冲动/僵住时，先执行固定的 3 步降噪流程。`,
+        `按“工作/关系/独处”三个场景做月度复盘，确认同一功能栈是否稳定出现，而不是只在单一场景成立。`,
+      ],
+    };
+  }
+
+  return {
+    currentZh: "高阶（稳定阶段）",
+    targetZh: "目标: 维持高阶并扩展可迁移性（避免高分低适应）",
+    diagnosisZh,
+    upgradePlanZh: [
+      `保持主辅优势的同时，持续补位低频功能，尤其是 ${typeResult.stack.inf} 在压力场景下的稳定表达。`,
+      `针对最弱分辨对偶 ${weakPair.a}/${weakPair.b} 继续训练，以防在复杂场景中“回落到单一路径”。`,
+      "把你的高阶策略沉淀为可执行模板（复盘表、沟通脚本、决策清单），提高可复制性。",
+    ],
+  };
+}
+
 export function buildJungDeepReport(args: {
   scores: JungScorePackV2;
   typeResult: JungTypeResultV2;
@@ -381,6 +463,13 @@ export function buildJungDeepReport(args: {
   const dom = typeResult.stack.dom;
   const aux = typeResult.stack.aux;
   const inf = typeResult.stack.inf;
+  const levelZh = normalizeLevelZh(typeResult.level as unknown);
+  const levelCard = buildLevelCard({
+    level: levelZh,
+    scores: f,
+    quality,
+    typeResult,
+  });
 
   const evidence = makeEvidence({ answers: args.answers });
 
@@ -426,6 +515,7 @@ export function buildJungDeepReport(args: {
   if (quality.warnings.length > 0) notesZh.push(...quality.warnings);
   notesZh.push("说明: 这里的“功能”描述的是偏好路径, 不等同于能力高低。");
   notesZh.push("说明: 功能栈为 Grant 经典模型的推断, 结果会受作答状态与题目覆盖影响。");
+  notesZh.push("层级说明: 低阶/中阶/高阶反映的是当前结果的稳定度与跨场景一致性, 不是“人格高低”。");
   notesZh.push("建议: 把结果当作语言工具, 用来解释冲突点与恢复方式, 而不是给自己贴死标签。");
 
   return {
@@ -433,7 +523,9 @@ export function buildJungDeepReport(args: {
     summaryZh:
       "我们先测量荣格八维（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）的使用偏好, 再用功能栈匹配推断类型。深度报告会把每个功能落到现实场景, 并展示你在关键题上的选择作为依据。",
     stackLineZh: `功能栈: ${stackLine(typeResult.stack)}`,
-    domAuxLineZh: `主导/辅助: ${funcLabelZh(dom)} + ${funcLabelZh(aux)}（置信度 ${Math.round(typeResult.confidence * 100)}% / ${typeResult.level}）`,
+    domAuxLineZh: `主导/辅助: ${funcLabelZh(dom)} + ${funcLabelZh(aux)}（置信度 ${Math.round(typeResult.confidence * 100)}% / ${levelZh}）`,
+    levelZh,
+    levelCard,
     strengthsZh,
     risksZh,
     functions: sections,
