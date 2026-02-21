@@ -1,0 +1,10 @@
+rg16.example.com {
+  encode gzip zstd
+
+  # Increase body size for webhook payload tolerance.
+  request_body {
+    max_size 20MB
+  }
+
+  reverse_proxy app:3000
+}
