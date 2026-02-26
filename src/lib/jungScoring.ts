@@ -149,7 +149,15 @@ export function scoreAssessmentV2(args: {
       avgMsPerItem: avgMsPerItem != null ? Math.round(avgMsPerItem) : undefined,
       quality,
       warnings,
+      breakdown: {
+        completionScore: Number(completionScore.toFixed(3)),
+        varianceScore: Number(varianceScore.toFixed(3)),
+        choiceBiasScore: Number(choiceBiasScore.toFixed(3)),
+        straightlineScore: Number(straightlineScore.toFixed(3)),
+        speedScore: Number(speedScore.toFixed(3)),
+        posTotal,
+        maxPosShare: Number(maxPosShare.toFixed(3)),
+      },
     },
   };
 }
-

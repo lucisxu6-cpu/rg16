@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "RG16 · 荣格八维认知功能测评（含 16-type 标签）",
   description:
-    "用荣格八维（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）做题推断你的功能栈与 16-type 标签，并支持付费解锁更深入的现实映射报告。",
+    "用荣格八维（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）推断功能栈与 16-type，免费查看基础结果与人群占比，按需解锁更深入的现实映射报告。",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
           <div className="topbar animIn stagger1">
             <div className="brand">
               <div className="logo">RG16</div>
-              <div className="tagline">Jung 8 functions grounded · MBTI label output</div>
+              <div className="tagline">Jung 8 functions · social-context report</div>
             </div>
             <Link className="btn btnSmall" href="/test">
               开始做题

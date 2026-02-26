@@ -121,7 +121,7 @@ export default function UnlockPanel(props: Props) {
     <div className="card sideCard animIn stagger3">
       <h3>可选升级：解锁深度报告</h3>
       <p>
-        你现在看到的是完整免费结果。若希望更深入，一次性付费 {props.priceLabel} 可解锁八维逐维现实映射、关键题证据链与更细行动建议。
+        你现在看到的是完整免费结果。若希望更深入，一次性付费 {props.priceLabel} 可解锁八维逐维现实映射、关键题证据链，以及关系/协作中的互动脚本建议。
       </p>
       <div className="payMethodRow" style={{ marginTop: 12 }}>
         <button
@@ -145,6 +145,7 @@ export default function UnlockPanel(props: Props) {
         <li>免费已含：类型、功能栈、八维强度、置信度</li>
         <li>付费新增：每一维在工作/关系/压力中的具体表现</li>
         <li>付费新增：结论依据（你在关键题目的选择）</li>
+        <li>付费新增：高阶/中阶/低阶升阶路径与社交误解修正动作</li>
       </ul>
       <p className="muted" style={{ marginTop: 8 }}>
         微信支付为 H5 拉起模式，推荐在手机浏览器中完成。

@@ -643,6 +643,75 @@ a{ color: inherit; text-decoration: none; }
   color: rgba(11,18,32,.66);
   font-size: 12px;
 }
+.liveInsight{
+  margin: 12px 0 8px;
+  border: 1px solid rgba(11,18,32,.16);
+  border-radius: 14px;
+  padding: 10px;
+  background:
+    radial-gradient(240px 180px at 0% 0%, rgba(198,255,107,.20), transparent 60%),
+    radial-gradient(220px 170px at 100% 0%, rgba(123,223,242,.18), transparent 60%),
+    rgba(255,255,255,.34);
+}
+.liveHead{
+  display:flex;
+  justify-content:space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+.liveHead strong{
+  font-size: 13px;
+  line-height: 1.35;
+}
+.liveHead span{
+  color: rgba(11,18,32,.66);
+  font-size: 12px;
+}
+.liveNudge{
+  margin: 6px 0 0;
+  color: rgba(11,18,32,.82);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.liveMeta{
+  margin: 8px 0 0;
+  color: rgba(11,18,32,.78);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.liveBars{
+  margin-top: 8px;
+  display:grid;
+  gap: 6px;
+}
+.liveBarRow{
+  display:grid;
+  grid-template-columns: 116px 1fr 42px;
+  gap: 8px;
+  align-items: center;
+}
+.liveBarLabel{
+  font-size: 11.5px;
+  color: rgba(11,18,32,.74);
+}
+.liveBarTrack{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(11,18,32,.10);
+  border: 1px solid rgba(11,18,32,.12);
+  overflow:hidden;
+}
+.liveBarFill{
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,77,109,.68), rgba(123,223,242,.62));
+  width: 0%;
+}
+.liveBarValue{
+  text-align: right;
+  color: rgba(11,18,32,.72);
+  font-size: 11.5px;
+}
 .qText{
   font-family: var(--font-display, ui-serif);
   font-weight: 800;
@@ -745,10 +814,24 @@ a{ color: inherit; text-decoration: none; }
 }
 .barRow{
   display:grid;
-  grid-template-columns: 82px 1fr 46px;
+  grid-template-columns: 126px 1fr 76px;
   gap: 10px;
   align-items:center;
   font-size: 13px;
+}
+.barLabelDual{
+  display:grid;
+  gap: 2px;
+  min-width: 0;
+}
+.barLabelDual strong{
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+.barLabelDual span{
+  color: rgba(11,18,32,.64);
+  font-size: 11px;
+  line-height: 1.25;
 }
 .barTrack{
   height: 10px;
@@ -762,6 +845,57 @@ a{ color: inherit; text-decoration: none; }
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(255,77,109,.74), rgba(123,223,242,.60));
   width: 0%;
+}
+.axisExplainList{
+  display:grid;
+  gap: 8px;
+}
+.axisExplainItem{
+  border: 1px solid rgba(11,18,32,.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,.34);
+  padding: 10px;
+}
+.axisExplainTitle{
+  margin: 0;
+  font-size: 12.5px;
+  color: rgba(11,18,32,.9);
+}
+.axisExplainText{
+  margin: 5px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(11,18,32,.72);
+}
+.methodGrid{
+  display:grid;
+  gap: 8px;
+}
+.methodCell{
+  border: 1px solid rgba(11,18,32,.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,.34);
+  padding: 10px;
+  display:grid;
+  gap: 6px;
+}
+.methodCell strong{
+  font-size: 13px;
+  line-height: 1.35;
+}
+.methodCell span{
+  color: rgba(11,18,32,.74);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.methodList{
+  margin: 0;
+  padding-left: 18px;
+}
+.methodList li{
+  margin: 4px 0;
+  font-size: 12.5px;
+  color: rgba(11,18,32,.78);
 }
 
 .lockCard{
@@ -904,6 +1038,32 @@ a{ color: inherit; text-decoration: none; }
     align-items: flex-start;
     gap: 4px;
     font-size: 11.5px;
+  }
+  .liveInsight{
+    margin: 10px 0 8px;
+    padding: 9px;
+  }
+  .liveHead{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  .liveBarRow{
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label value"
+      "track track";
+    gap: 5px 8px;
+  }
+  .liveBarLabel{
+    grid-area: label;
+  }
+  .liveBarTrack{
+    grid-area: track;
+  }
+  .liveBarValue{
+    grid-area: value;
+    font-size: 11px;
   }
   .qText{
     font-size: clamp(21px, 6.6vw, 30px);

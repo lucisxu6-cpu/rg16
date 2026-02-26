@@ -23,13 +23,13 @@ export default function HomePage() {
           <div className="heroCopy">
             <p className="kicker">RG16 / Jung 8 Functions</p>
             <h1 className="hTitle">
-              <span>第一次接触 MBTI？</span>
+              <span>不只 4 个字母标签。</span>
               <br />
-              <span>先看你的荣格八维。</span>
+              <span>看清你在人群中的位置。</span>
             </h1>
             <p className="lead">
-              我们不只给你 4 个字母标签, 而是给出你如何感知世界、如何做判断的“功能路径”。
-              免费可看八维强度 + 主辅功能 + 16-type 标签, 深度报告再把每一维映射到工作、关系与压力场景。
+              你会拿到三层结果: 你的荣格八维功能路径、你在站内样本中的类型占比、以及你在关系/协作中的常见被感知方式。
+              免费版先给完整核心结果，付费版再深入到逐维证据与升阶策略。
             </p>
 
             <div className="chips" aria-label="highlights">
@@ -37,10 +37,13 @@ export default function HomePage() {
                 <strong>64 题混合模型</strong> 情境题 + 二选一 + 量表校准
               </div>
               <div className="chip">
-                <strong>免费结果</strong> 八维强度 + 主辅功能 + 16-type
+                <strong>免费结果</strong> 八维强度 + 主辅功能 + 人群占比
               </div>
               <div className="chip">
-                <strong>付费深度</strong> 现实映射 + 证据链 + 盲点提示
+                <strong>过程反馈</strong> 做题中实时预估功能栈，减少中途放弃
+              </div>
+              <div className="chip">
+                <strong>付费深度</strong> 互动脚本 + 证据链 + 升阶路径
               </div>
             </div>
 
@@ -80,7 +83,7 @@ export default function HomePage() {
             <ul>
               <li>预计 10-15 分钟完成</li>
               <li>无需注册, 结果链接自动生成</li>
-              <li>包含作答质量与置信度提示</li>
+              <li>答题中实时显示“当前预估类型”</li>
             </ul>
           </aside>
         </div>
@@ -91,7 +94,7 @@ export default function HomePage() {
           <p className="kicker">Pricing Clarity</p>
           <h3>先说清楚：做完题一定有免费结果，付费是可选升级</h3>
           <p>
-            你提交后会立刻看到完整免费报告（八维强度 + 主辅功能 + 类型置信度 + 基础解读），
+            你提交后会立刻看到完整免费报告（八维强度 + 主辅功能 + 类型置信度 + 人群占比 + 基础解读），
             不需要先付款。付费只在你想看更深层现实映射时再决定。
           </p>
         </div>
@@ -106,6 +109,7 @@ export default function HomePage() {
               <li>主导/辅助/第三/劣势功能栈</li>
               <li>八维强度条（Se/Si/Ne/Ni/Te/Ti/Fe/Fi）</li>
               <li>类型置信度 + 作答质量提示</li>
+              <li>站内占比 + 全国基线（非站内）对比</li>
               <li>免费核心解读（优势、风险、行动建议）</li>
             </ul>
           </article>
@@ -119,7 +123,7 @@ export default function HomePage() {
               <li>每个维度的盲点与补偿路径</li>
               <li>关键题目证据链（结论可追溯）</li>
               <li>类型层级（高阶/中阶/低阶）进阶解读</li>
-              <li>更细的个性化落地建议</li>
+              <li>关系与协作中的误解修正脚本</li>
             </ul>
           </article>
         </div>
@@ -137,9 +141,9 @@ export default function HomePage() {
         <div className="card sideCard">
           <h3>为什么更容易“说到心里”</h3>
           <p>
-            报告不是抽象结论, 而是把每个功能映射到真实场景:
-            你在团队里如何决策、冲突时如何反应、压力大时会怎样补偿。
-            你还能看到触发这些判断的关键题目, 结论可追溯。
+            报告不是抽象结论, 而是把每个功能映射到真实社交情境:
+            你在团队里如何被感知、冲突时为何容易误解、压力下会怎样补偿。
+            同时给出关键题证据，让“像不像你”有依据可追溯。
           </p>
         </div>
       </section>

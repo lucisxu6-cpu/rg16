@@ -45,6 +45,18 @@ type StoreData = {
   entitlements: Record<string, Record<string, StoredEntitlement>>; // assessmentId -> module -> entitlement
 };
 
+export type TypeDistributionRow = {
+  type: string;
+  count: number;
+  share: number; // 0..1
+  rank: number; // 1-based
+};
+
+export type TypeDistributionStats = {
+  sampleSize: number;
+  rows: TypeDistributionRow[];
+};
+
 function findRepoRoot(startDir: string): string {
   // Next dev/build may run route modules under a different cwd (e.g. inside .next/).
   // Walk up to find this repo's package.json so file storage is stable.
@@ -177,4 +189,42 @@ export async function upsertOrder(args: StoredOrder) {
     await save(data);
     return data.orders[args.stripeCheckoutSessionId];
   });
+}
+
+function readTypeFromMbtiJson(value: unknown): string | null {
+  if (value == null || typeof value !== "object" || Array.isArray(value)) return null;
+  const t = (value as { type?: unknown }).type;
+  if (typeof t !== "string") return null;
+  const type = t.trim().toUpperCase();
+  if (!/^[EI][SN][FT][JP]$/.test(type)) return null;
+  return type;
+}
+
+export async function getTypeDistribution(args?: { version?: string; limit?: number }): Promise<TypeDistributionStats> {
+  const data = await load();
+  const version = args?.version;
+  const limit = args?.limit ?? 16;
+
+  const counts = new Map<string, number>();
+  let sampleSize = 0;
+
+  for (const row of Object.values(data.assessments)) {
+    if (version != null && row.version !== version) continue;
+    const t = readTypeFromMbtiJson(row.mbtiJson);
+    if (!t) continue;
+    sampleSize += 1;
+    counts.set(t, (counts.get(t) ?? 0) + 1);
+  }
+
+  const rows = Array.from(counts.entries())
+    .map(([type, count]) => ({
+      type,
+      count,
+      share: sampleSize > 0 ? count / sampleSize : 0,
+    }))
+    .sort((a, b) => b.count - a.count || a.type.localeCompare(b.type))
+    .slice(0, Math.max(1, limit))
+    .map((row, i) => ({ ...row, rank: i + 1 }));
+
+  return { sampleSize, rows };
 }

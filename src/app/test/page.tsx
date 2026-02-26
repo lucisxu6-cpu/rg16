@@ -3,7 +3,16 @@
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { JUNG_QUESTIONS_V2, LIKERT_SCALE_ZH, QUESTIONNAIRE_VERSION_V2, type JungQuestion } from "@/data/jung";
+import {
+  JUNG_QUESTIONS_V2,
+  JUNG_FUNCTIONS_META,
+  LIKERT_SCALE_ZH,
+  QUESTIONNAIRE_VERSION_V2,
+  type FunctionId,
+  type JungQuestion,
+} from "@/data/jung";
+import { scoreAssessmentV2 } from "@/lib/jungScoring";
+import { inferJungTypeV2 } from "@/lib/jungType";
 import { SKUS } from "@/lib/sku";
 
 type AnswerState = Record<string, string | undefined>;
@@ -19,6 +28,27 @@ function questionTypeZh(q: JungQuestion) {
   if (q.type === "likert") return "校准题";
   if (q.type === "forced") return "二选一";
   return "情境题";
+}
+
+function sortedFunctions(scores: Record<FunctionId, number>) {
+  return (Object.keys(scores) as FunctionId[]).sort((a, b) => scores[b] - scores[a]);
+}
+
+function stageName(answered: number, total: number) {
+  const p = answered / Math.max(1, total);
+  if (p < 0.2) return "探索期";
+  if (p < 0.5) return "成形期";
+  if (p < 0.8) return "收敛期";
+  return "稳定期";
+}
+
+function progressNudge(answered: number, total: number, liveType: string) {
+  const left = Math.max(0, total - answered);
+  if (answered < 8) return `再完成 ${8 - answered} 题，会出现第一版功能栈预估。`;
+  if (answered < 24) return `你已进入“成形区间”，当前预估 ${liveType}。再做 ${Math.min(6, left)} 题，对偶轴会更清晰。`;
+  if (answered < 48) return `中段是最容易放弃的阶段。你已完成 ${answered}/${total}，继续做完会显著提升置信度。`;
+  if (left > 0) return `最后 ${left} 题是“稳定层”，会决定低/中/高阶判定。`;
+  return "已完成全部题目，提交后查看完整报告。";
 }
 
 export default function TestPage() {
@@ -37,6 +67,26 @@ export default function TestPage() {
 
   const answeredCount = useMemo(() => Object.values(answers).filter((v) => v != null).length, [answers]);
   const progressPct = Math.round((answeredCount / Math.max(1, total)) * 100);
+  const livePreview = useMemo(() => {
+    if (answeredCount < 8) return null;
+    const computed = scoreAssessmentV2({
+      version: QUESTIONNAIRE_VERSION_V2,
+      answers,
+    });
+    const type = inferJungTypeV2(computed.scores.functions);
+    const ranking = sortedFunctions(computed.scores.functions);
+    return {
+      type: type.type,
+      confidence: type.confidence,
+      stackLine: `${type.stack.dom} → ${type.stack.aux} → ${type.stack.ter} → ${type.stack.inf}`,
+      top4: ranking.slice(0, 4).map((id) => ({
+        id,
+        score: computed.scores.functions[id],
+      })),
+    };
+  }, [answers, answeredCount]);
+  const liveType = livePreview?.type ?? "待形成";
+  const nudge = useMemo(() => progressNudge(answeredCount, total, liveType), [answeredCount, total, liveType]);
 
   function setAnswer(optionId: string) {
     setAnswers((prev) => {
@@ -94,11 +144,11 @@ export default function TestPage() {
         <div className="billingGrid">
           <div className="billingCell">
             <strong>免费即可获得</strong>
-            <span>16-type + 功能栈 + 八维强度 + 置信度与基础解读</span>
+            <span>16-type + 功能栈 + 八维强度 + 站内占比/全国基线对比 + 社会化基础解读</span>
           </div>
           <div className="billingCell">
             <strong>可选付费 {priceLabel}</strong>
-            <span>解锁逐维现实映射、证据链与进阶建议（非必买）</span>
+            <span>解锁逐维现实映射、互动脚本、证据链与升阶建议（非必买）</span>
           </div>
         </div>
       </section>
@@ -116,6 +166,45 @@ export default function TestPage() {
           </div>
         </div>
       </div>
+
+      <section className="liveInsight" aria-label="live-insight">
+        <div className="liveHead">
+          <strong>实时洞察（进行中）</strong>
+          <span>
+            {stageName(answeredCount, total)} · {progressPct}%
+          </span>
+        </div>
+        <p className="liveNudge">{nudge}</p>
+        {livePreview ? (
+          <>
+            <p className="liveMeta">
+              当前预估类型: <strong>{livePreview.type}</strong>（暂定置信度 {Math.round(livePreview.confidence * 100)}%）
+              <br />
+              当前预估功能栈: <strong>{livePreview.stackLine}</strong>
+            </p>
+            <div className="liveBars">
+              {livePreview.top4.map((x) => (
+                <div className="liveBarRow" key={x.id}>
+                  <div className="liveBarLabel">
+                    {x.id} · {JUNG_FUNCTIONS_META[x.id].nameZh}
+                  </div>
+                  <div className="liveBarTrack">
+                    <div className="liveBarFill" style={{ width: `${x.score}%` }} />
+                  </div>
+                  <div className="liveBarValue">{x.score}%</div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="muted" style={{ marginTop: 6 }}>
+            先完成至少 8 题，我们再给你第一版动态功能栈。
+          </p>
+        )}
+        <p className="muted" style={{ marginTop: 8 }}>
+          说明：这是过程预估，用来提升参与感与好奇心；最终结果以提交后完整评分为准。
+        </p>
+      </section>
 
       <div className="qText">{q.prompt}</div>
 

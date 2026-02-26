@@ -17,6 +17,15 @@ export type QualityPack = {
   avgMsPerItem?: number;
   quality: number; // 0..100
   warnings: string[];
+  breakdown?: {
+    completionScore: number; // 0..1
+    varianceScore: number; // 0..1
+    choiceBiasScore?: number; // 0..1 (V2 only)
+    straightlineScore: number; // 0..1
+    speedScore: number; // 0..1
+    posTotal?: number;
+    maxPosShare?: number; // 0..1 (V2 only)
+  };
 };
 
 function clamp01(n: number) {
@@ -133,6 +142,12 @@ export function scoreAssessmentV1(args: {
       avgMsPerItem: avgMsPerItem != null ? Math.round(avgMsPerItem) : undefined,
       quality,
       warnings,
+      breakdown: {
+        completionScore: Number(completionScore.toFixed(3)),
+        varianceScore: Number(varianceScore.toFixed(3)),
+        straightlineScore: Number(straightlineScore.toFixed(3)),
+        speedScore: Number(speedScore.toFixed(3)),
+      },
     },
   };
 }

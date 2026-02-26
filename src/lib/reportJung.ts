@@ -62,6 +62,7 @@ export type JungDeepReport = {
   };
   strengthsZh: string[];
   risksZh: string[];
+  socialScriptsZh: string[];
   functions: FunctionSection[];
   notesZh: string[];
 };
@@ -408,6 +409,7 @@ function buildLevelCard(args: {
   const weakPair = weakestPair(scores);
   const diagnosisZh: string[] = [
     `当前层级: ${level}（置信度 ${Math.round(typeResult.confidence * 100)}%，类型差值 gap ${typeResult.debug.gap}，对偶清晰度 ${Math.round(typeResult.debug.pairClarity * 100)}%）。`,
+    "层级阈值: 高阶 >= 75%，中阶 60%-74%，低阶 < 60%（仅表示结果稳定度，不表示人格高低）。",
     `最难区分的一组是 ${weakPair.a}/${weakPair.b}（差值 ${weakPair.diff} 分），这是层级提升时最需要关注的分辨点。`,
     `本次作答质量 ${quality.quality}/100${quality.warnings.length > 0 ? `，注意: ${quality.warnings[0]}` : "，结果稳定性较好。"
     }`,
@@ -489,6 +491,13 @@ export function buildJungDeepReport(args: {
     `当压力很大时, 你更可能以 ${funcLabelZh(inf)} 的方式“失控式补偿”（例如冲动/逃避/过度刺激或过度规训）。`,
   ];
 
+  const socialScriptsZh: string[] = [
+    `第一印象脚本: 在新关系里, 你通常先被看见的是 ${funcLabelZh(dom)}。建议用一句“我这样做是为了 ___”把动机显性化, 减少被贴标签。`,
+    `冲突协商脚本: 当对方与你分歧时, 先用 ${funcLabelZh(aux)} 做 1 句对齐（目标/关系/价值其一）, 再给结论，能显著降低对抗感。`,
+    `误解修正脚本: 当你被误解时, 不先争“对错”, 先复述对方担心点，再补充你在意的边界。这样能降低基本归因偏差带来的误读。`,
+    `压力回稳脚本: 出现 ${funcLabelZh(inf)} 的补偿反应时, 先做 3 步（停 10 秒-写下事实-再决定动作）, 避免把短时情绪投射到长期关系。`,
+  ];
+
   const sections: FunctionSection[] = functionIds
     .map((func) => {
       const score = f[func];
@@ -528,6 +537,7 @@ export function buildJungDeepReport(args: {
     levelCard,
     strengthsZh,
     risksZh,
+    socialScriptsZh,
     functions: sections,
     notesZh,
   };
