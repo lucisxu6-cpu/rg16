@@ -23,9 +23,9 @@ export default function HomePage() {
           <div className="heroCopy">
             <p className="kicker">RG16 / Jung 8 Functions</p>
             <h1 className="hTitle">
-              <span>不只 4 个字母标签。</span>
-              <br />
-              <span>看清你在人群中的位置。</span>
+              <span className="titleLine">不只 4 个字母标签。</span>
+              <span className="titleLine">看清你在</span>
+              <span className="titleLine">人群中的位置。</span>
             </h1>
             <p className="lead">
               你会拿到三层结果: 你的荣格八维功能路径、你在站内样本中的类型占比、以及你在关系/协作中的常见被感知方式。
