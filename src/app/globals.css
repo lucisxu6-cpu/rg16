@@ -1646,6 +1646,56 @@ body::before{
   }
 }
 
+@media (max-width: 760px){
+  .topbar{
+    top: 6px;
+  }
+  .liveBarRow{
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label value"
+      "track track";
+    gap: 5px 8px;
+  }
+  .liveBarLabel{
+    grid-area: label;
+  }
+  .liveBarTrack{
+    grid-area: track;
+  }
+  .liveBarValue{
+    grid-area: value;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 640px){
+  .barRow{
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label value"
+      "track track";
+    gap: 6px 8px;
+  }
+  .barRow > div:first-child{
+    grid-area: label;
+  }
+  .barRow > .barTrack{
+    grid-area: track;
+  }
+  .barRow > .muted{
+    grid-area: value;
+    text-align: right;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .focalRing{
+    animation: none;
+  }
+}
+
 @keyframes ringSpin{
   from{ transform: rotate(0deg); }
   to{ transform: rotate(360deg); }

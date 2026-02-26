@@ -8,6 +8,7 @@ import { isPaywallBypassed } from "@/lib/entitlements";
 import type { MbtiResult } from "@/lib/mbti";
 import { buildDeepReport } from "@/lib/report";
 import { buildJungDeepReport } from "@/lib/reportJung";
+import { buildRomanticProfile } from "@/lib/romance";
 import { SKUS } from "@/lib/sku";
 import { scoreAssessmentV2, type JungScorePackV2 } from "@/lib/jungScoring";
 import type { JungTypeId, JungTypeResultV2 } from "@/lib/jungType";
@@ -337,6 +338,7 @@ export default async function ResultPage({
     const siteVsBaselineDelta = currentTypeRow && baselineCurrentRow ? currentTypeRow.share - baselineCurrentRow.share : null;
     const siteRankVsBaseline =
       currentTypeRow && baselineCurrentRow ? baselineCurrentRow.rank - currentTypeRow.rank : null;
+    const romance = buildRomanticProfile({ type: jung.type, stack: jung.stack });
     const quickShare = currentTypeRow
       ? `我是 ${jung.type}，主导/辅助 ${jung.stack.dom}/${jung.stack.aux}。本站占比 ${pct1(currentTypeRow.share)}，全国基线 ${baselineCurrentRow ? pct1(baselineCurrentRow.share) : "--"}。`
       : `我是 ${jung.type}，主导/辅助 ${jung.stack.dom}/${jung.stack.aux}。全国基线占比 ${baselineCurrentRow ? pct1(baselineCurrentRow.share) : "--"}。`;
@@ -546,6 +548,80 @@ export default async function ResultPage({
               <strong>可直接分享的一句话</strong>
               <span>{quickShare}</span>
             </div>
+          </div>
+        </section>
+
+        <section className="section grid2">
+          <div className="card sideCard">
+            <h3>恋爱匹配图谱（官配 / 高摩擦）</h3>
+            <p>
+              这不是“命中注定”，而是基于功能栈与社会心理学，给你一个“更容易甜、也更容易拉扯”的关系概率地图。
+            </p>
+            <div className="methodCell" style={{ marginTop: 10 }}>
+              <strong>高稳定官配（长期）</strong>
+              <ul className="methodList">
+                {romance.secureMatches.map((x) => (
+                  <li key={`secure_${x.type}`}>
+                    <strong>{x.type}</strong>：{x.reasonZh}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="methodCell" style={{ marginTop: 10 }}>
+              <strong>高张力心动（高火花）</strong>
+              <ul className="methodList">
+                {romance.sparkMatches.map((x) => (
+                  <li key={`spark_${x.type}`}>
+                    <strong>{x.type}</strong>：{x.reasonZh}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <p className="muted" style={{ marginTop: 8 }}>
+              模型说明：{romance.modelNotesZh[0]}
+            </p>
+          </div>
+
+          <div className="card sideCard">
+            <h3>浪漫与情绪价值（可落地）</h3>
+            <p>你的关系核心情绪需求（偏 {jung.stack.dom}）：</p>
+            <ul>
+              {romance.emotionalNeedsZh.map((x) => (
+                <li key={x}>{x}</li>
+              ))}
+            </ul>
+            <div className="methodCell" style={{ marginTop: 10 }}>
+              <strong>高摩擦预警（提前知道，少走弯路）</strong>
+              <ul className="methodList">
+                {romance.frictionMatches.map((x) => (
+                  <li key={`friction_${x.type}`}>
+                    <strong>{x.type}</strong>：{x.triggerZh}
+                    <br />
+                    修复动作：{x.repairZh}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="methodCell" style={{ marginTop: 10 }}>
+              <strong>可直接分享的一句话</strong>
+              <span>{romance.shareLineZh}</span>
+            </div>
+            {deepUnlocked ? (
+              <div className="methodCell" style={{ marginTop: 10 }}>
+                <strong>深度关系推进建议（解锁）</strong>
+                <ul className="methodList">
+                  {romance.secureMatches.map((x) => (
+                    <li key={`sweet_${x.type}`}>
+                      与 {x.type} 相处：{x.sweetActionZh}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p className="muted" style={{ marginTop: 8 }}>
+                深度版会把“暧昧推进-冲突修复-关系复盘”做成具体对话脚本（按你的功能栈定制）。
+              </p>
+            )}
           </div>
         </section>
 
