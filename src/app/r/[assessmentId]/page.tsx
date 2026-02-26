@@ -342,7 +342,7 @@ export default async function ResultPage({
       : `我是 ${jung.type}，主导/辅助 ${jung.stack.dom}/${jung.stack.aux}。全国基线占比 ${baselineCurrentRow ? pct1(baselineCurrentRow.share) : "--"}。`;
 
     return (
-      <main>
+      <main className="resultLayout">
         <section className="card resultTop animIn stagger2">
           <p className="kicker">Result</p>
           <div className="typeBig">{jung.type}</div>
@@ -756,7 +756,7 @@ export default async function ResultPage({
   const report = deepUnlocked ? buildDeepReport({ scores, mbti, quality }) : null;
 
   return (
-    <main>
+    <main className="resultLayout">
       <section className="card resultTop animIn stagger2">
         <p className="kicker">Result</p>
         <div className="typeBig">{mbti.type}</div>

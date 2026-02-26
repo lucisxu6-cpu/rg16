@@ -138,7 +138,7 @@ export default function TestPage() {
   }
 
   return (
-    <main className="card testWrap animIn stagger2">
+    <main className="card testWrap testShell animIn stagger2">
       <section className="billingNotice" aria-label="billing-clarity">
         <div className="billingTitle">计费说明（先看再做）</div>
         <div className="billingGrid">

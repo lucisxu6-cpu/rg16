@@ -59,6 +59,21 @@ export default function HomePage() {
             </div>
           </div>
 
+          <div className="heroFocal" aria-hidden>
+            <div className="focalRing">
+              <div className="focalCore">
+                <p>RG16</p>
+                <strong>人格认知镜像</strong>
+                <span>Function-First</span>
+              </div>
+            </div>
+            <div className="focalTags">
+              <i>八维功能</i>
+              <i>人群对比</i>
+              <i>互动脚本</i>
+            </div>
+          </div>
+
           <aside className="heroPanel">
             <p className="panelKicker">认知罗盘</p>
             <h3>你会拿到什么</h3>
